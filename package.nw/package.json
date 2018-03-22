@@ -1,7 +1,7 @@
 {
   "forceVendor": true,
   "main": "html/index.html",
-  "name": "wechat-web-tools",
+  "name": "wxdt",
   "productName": "微信开发者工具",
   "appname": "wechatwebdevtools",
   "version": "1.02.1803210",
