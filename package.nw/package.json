@@ -1,0 +1,109 @@
+{
+  "forceVendor": true,
+  "main": "html/index.html",
+  "name": "package.nw",
+  "productName": "微信开发者工具",
+  "appname": "wechatwebdevtools",
+  "version": "1.02.1802270",
+  "window": {
+    "id": "init",
+    "title": "微信开发者工具 v1.02.1802270",
+    "icon": "app/images/logo2.png",
+    "toolbar": true,
+    "width": 334,
+    "height": 474,
+    "show": false,
+    "transparent": false,
+    "frame": false
+  },
+  "inject_js_start": "js/extensions/inject/documentstart/index.js",
+  "inject_js_end": "js/extensions/inject/devtools/index.js",
+  "chromium-args": "--disable-devtools --ignore-gpu-blacklist  --enable-experimental-web-platform-features -load-extension=./package.nw/js/extensions/devtools/ -ignore-certificate-errors",
+  "node-remote": [
+    "http://*.open.weixin.qq.com/*",
+    "https://*.mp.weixin.qq.com/*",
+    "http://127.0.0.1:*/*"
+  ],
+  "webview": {
+    "partitions": [
+      {
+        "name": "devtools",
+        "accessible_resources": [
+          "<all_urls>"
+        ]
+      },
+      {
+        "name": "remotedebugdevtools",
+        "accessible_resources": [
+          "<all_urls>"
+        ],
+        "web_accessible_resources": [
+          "<all_urls>"
+        ]
+      },
+      {
+        "name": "simulator",
+        "accessible_resources": [
+          "<all_urls>"
+        ]
+      },
+      {
+        "name": "editor",
+        "accessible_resources": [
+          "<all_urls>"
+        ]
+      },
+      {
+        "name": "appservice",
+        "accessible_resources": [
+          "<all_urls>"
+        ]
+      },
+      {
+        "name": "htmlwebview",
+        "accessible_resources": [
+          "<all_urls>"
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "adbkit": "^2.10.0",
+    "adm-zip": "^0.4.7",
+    "asar": "0.12.1",
+    "async": "^2.4.1",
+    "autoprefixer": "^7.1.1",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-minify": "^0.2.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "chokidar": "file:./packages/chokidar",
+    "classnames": "^2.2.5",
+    "eventemitter3": "^2.0.3",
+    "fontkit": "^1.7.7",
+    "git-utils": "^5.0.0",
+    "image-size": "^0.6.1",
+    "jimp": "^0.2.28",
+    "js-beautify": "^1.6.14",
+    "lazyload": "file:./packages/lazyload",
+    "log": "^1.4.0",
+    "mkdir-p": "0.0.7",
+    "moment": "^2.18.1",
+    "node-sync-ipc": "file:./packages/node-sync-ipc",
+    "nw": "0.24.4-sdk",
+    "perfectionist": "2.4.0",
+    "protobufjs": "^6.8.0",
+    "qrcode-terminal": "^0.11.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.5",
+    "redux": "^3.6.0",
+    "redux-persist": "^4.8.0",
+    "redux-thunk": "^2.2.0",
+    "request-promise-native": "^1.0.5",
+    "rmdir": "^1.2.0",
+    "trash": "^4.0.1",
+    "uglify-js": "3.0.27",
+    "ws": "^3.0.0"
+  }
+}
