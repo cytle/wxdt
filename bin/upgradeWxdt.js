@@ -4,12 +4,15 @@
 
 const os = require('os');
 const shell = require('shelljs');
-
-console.log();
+const path = require('path');
 
 const PACKAGE_NW_PATH = path.resolve(__dirname, '..', 'package.nw');
 
-// shell.cp('-r', path.resolve(os.homedir(), '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw'), )
+shell.cp(
+  '-r',
+  path.resolve(os.homedir(), '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw'),
+  PACKAGE_NW_PATH,
+);
 
 //
 // 0. 新建tmp或是清空tmp文件夹
