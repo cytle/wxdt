@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9635C939-6177-7C49-6E40-9E8C860CF1EA}</ProjectGuid>
+    <ProjectGuid>{217F6640-E599-5572-C945-33CE9E3AC6AA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>client</RootNamespace>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>

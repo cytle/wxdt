@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{186A44CC-94CD-360B-B2A4-1D83CEBA75CD}</ProjectGuid>
+    <ProjectGuid>{D1057E7E-55ED-16B2-F23D-54392C306A95}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>server</RootNamespace>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
