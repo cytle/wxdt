@@ -5,18 +5,27 @@ updatePackageJson({
   PACKAGE_NAME: 'wxdt', // package名字
   NW_VERSION: '0.24.4-sdk', // 使用nwjs版本
   PACKAGE_NW_PATH: path.resolve(__dirname, '..', 'package.nw'),
+  PACKAGE_EXTENDS: {
+    scripts: {
+        start: 'nw .',
+    },
+    bin: './wxdt.js',
+  }
 });
 
 function updatePackageJson({
   PACKAGE_NAME,
   NW_VERSION,
   PACKAGE_NW_PATH,
+  PACKAGE_EXTENDS = {},
 }) {
-    const nwPackageJson = require(path.resolv(PACKAGE_NW_PATH, 'package.json'));
-    nwPackageJson.name = PACKAGE_NAME;
+    const nwPackageJson = {
+        ...readPackageJson(PACKAGE_NW_PATH),
+        name: PACKAGE_NAME,
+        ...PACKAGE_EXTENDS
+    };
+
     writePackageJson(PACKAGE_NW_PATH, nwPackageJson);
-    nwPackageJson.scripts = nwPackageJson.scripts || {};
-    nwPackageJson.scripts.start = 'nw .';
     nwPackageJson.dependencies = parseDependencies(getDependencies(PACKAGE_NW_PATH), PACKAGE_NW_PATH);
     nwPackageJson.dependencies.nw = NW_VERSION;
     delete nwPackageJson.dependencies['node-windows'];
@@ -30,6 +39,9 @@ function getDependencies(p) {
     return newPackageJson.dependencies;
 }
 
+function readPackageJson(packagePath) {
+    return require(path.resolv(packagePath, 'package.json'));
+}
 function writePackageJson(packageJson, packagePath) {
     shell
         .echo(JSON.stringify(packageJson, null, 2))
