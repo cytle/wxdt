@@ -15,6 +15,8 @@ function updatePackageJson({
     const nwPackageJson = require(path.resolv(PACKAGE_NW_PATH, 'package.json'));
     nwPackageJson.name = PACKAGE_NAME;
     writePackageJson(PACKAGE_NW_PATH, nwPackageJson);
+    nwPackageJson.scripts = nwPackageJson.scripts || {};
+    nwPackageJson.scripts.start = 'nw .';
     nwPackageJson.dependencies = parseDependencies(getDependencies(PACKAGE_NW_PATH), PACKAGE_NW_PATH);
     nwPackageJson.dependencies.nw = NW_VERSION;
     delete nwPackageJson.dependencies['node-windows'];
