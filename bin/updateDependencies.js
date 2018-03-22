@@ -1,52 +1,67 @@
 const shell = require('shelljs');
 const path = require('path');
-const nwPackageJson = require('../package.nw/package.json');
 
-const PACKAGE_NAME = 'wechat-web-tools'; // package名字
-const NW_VERSION = '0.24.4-sdk'; // 使用nwjs版本
-const PACKAGE_NW_PATH = path.resolve(__dirname, '..', 'package.nw');
+updatePackageJson({
+  PACKAGE_NAME: 'wxdt', // package名字
+  NW_VERSION: '0.24.4-sdk', // 使用nwjs版本
+  PACKAGE_NW_PATH: path.resolve(__dirname, '..', 'package.nw'),
+});
 
-const PACKAGE_NW_PACKAGES_PATH = path.resolve(PACKAGE_NW_PATH, 'packages');
+function updatePackageJson({
+  PACKAGE_NAME,
+  NW_VERSION,
+  PACKAGE_NW_PATH,
+}) {
+    const nwPackageJson = require(path.resolv(PACKAGE_NW_PATH, 'package.json'));
+    nwPackageJson.name = PACKAGE_NAME;
+    writePackageJson(PACKAGE_NW_PATH, nwPackageJson);
+    nwPackageJson.dependencies = parseDependencies(getDependencies(PACKAGE_NW_PATH), PACKAGE_NW_PATH);
+    nwPackageJson.dependencies.nw = NW_VERSION;
+    delete nwPackageJson.dependencies['node-windows'];
+    writePackageJson(PACKAGE_NW_PATH, nwPackageJson);
+}
 
-shell.mkdir('-p', PACKAGE_NW_PACKAGES_PATH);
+function getDependencies(p) {
+    shell.pushd(p);
+    const newPackageJson = JSON.parse(shell.exec('npm list --depth=0 --json').stdout);
+    shell.popd();
+    return newPackageJson.dependencies;
+}
 
-function parseDependencies (list) {
-    const result = {};
-    for (const packageName in list) {
-        const { from } = list[packageName];
+function writePackageJson(packageJson, packagePath) {
+    shell
+        .echo(JSON.stringify(packageJson, null, 2))
+        .to(path.resolve(packagePath, 'package.json'));
+}
+
+function parseDependencies (list, packagePath, packagesName = 'packages') {
+    const PACKAGE_NW_PACKAGES_PATH = path.resolve(packagePath, packagesName);
+    shell.mkdir('-p', PACKAGE_NW_PACKAGES_PATH);
+    /**
+     * 所有依赖，格式为
+     * {
+     *   name: version/file
+     * }
+     *
+     * 但包是私库时，会将其移动到packages下，
+     * 如："node-sync-ipc": "file:./packages/node-sync-ipc"
+     */
+    const dependencies = {};
+    for (const name in list) {
+        const { from } = list[name];
         if (from.indexOf('@') !== -1) {
-            shell.echo(packageName);
-            result[packageName] = from.split('@')[1];
+            shell.echo(name);
+            dependencies[name] = from.split('@')[1];
             continue;
         }
 
-        shell.echo('self package:', packageName, from);
+        shell.echo('self package:', name, from);
 
-        result[packageName] = `file:./packages/${packageName}`;
+        dependencies[name] = `file:./${packagesName}/${name}`;
         shell.cp('-R',
-            path.resolve(PACKAGE_NW_PATH, 'node_modules', packageName),
+            path.resolve(PACKAGE_NW_PATH, 'node_modules', name),
             PACKAGE_NW_PACKAGES_PATH
         );
     }
-    return result;
+    return dependencies;
 }
-
-nwPackageJson.name = PACKAGE_NAME;
-
-shell
-    .echo(JSON.stringify(nwPackageJson))
-    .to(path.resolve(PACKAGE_NW_PATH, 'package.json'));
-
-shell.cd(PACKAGE_NW_PATH);
-
-const npmList = shell.exec('npm list --depth=0 --json');
-
-const newPackageJson = JSON.parse(npmList.stdout);
-
-nwPackageJson.dependencies = parseDependencies(newPackageJson.dependencies);
-
-nwPackageJson.dependencies.nw = NW_VERSION;
-
-shell
-    .echo(JSON.stringify(nwPackageJson, null, 2))
-    .to(path.resolve(PACKAGE_NW_PATH, 'package.json'));
