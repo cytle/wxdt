@@ -11,20 +11,20 @@ const tencentWxdtPath = resolve(os.homedir(), '.wine/drive_c/Program Files (x86)
 
 shell.pushd(resolve(__dirname, '..'));
 
-// 0. 新建tmp或是清空tmp文件夹
-shell.rm('-rf', resolve, 'tmp');
+// 0. 清空tmp文件夹
+shell.rm('-rf', 'tmp');
 
 // 1. 使用wine安装开发者工具
 
 // 2. 把开发者工具文件夹拷贝到tmp
-shell.cp('-r', tencentWxdtPath, 'tmp');
+shell.cp('-R', tencentWxdtPath, 'tmp');
 
 // 3. 使用updateDependencies更新package.json
 updatePackageJson({
-  PACKAGE_NAME: 'wxdt', // package名字
-  NW_VERSION: '0.24.4-sdk', // 使用nwjs版本
-  PACKAGE_NW_PATH: 'tmp',
-  PACKAGE_EXTENDS: {
+  nwVersion: '0.24.4-sdk', // 使用nwjs版本
+  cwd: resolve(process.cwd(), 'tmp'),
+  packageExtends: {
+    name: 'wxdt',
     scripts: {
       start: 'nw .',
     },

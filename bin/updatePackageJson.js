@@ -53,22 +53,20 @@ function parseDependencies(list, packagesDir = 'packages') {
 }
 
 module.exports = function updatePackageJson({
-  PACKAGE_NAME,
-  NW_VERSION,
-  PACKAGE_NW_PATH,
-  PACKAGE_EXTENDS = {},
+  nwVersion,
+  cwd,
+  packageExtends = {},
 }) {
-  shell.pushd(PACKAGE_NW_PATH);
+  shell.pushd(cwd);
   const nwPackageJson = {
     ...readPackageJson(),
-    name: PACKAGE_NAME,
-    ...PACKAGE_EXTENDS,
+    ...packageExtends,
   };
 
   writePackageJson(nwPackageJson);
   nwPackageJson.dependencies = parseDependencies(getDependencies());
-  nwPackageJson.dependencies.nw = NW_VERSION;
+  nwPackageJson.dependencies.nw = nwVersion;
   delete nwPackageJson.dependencies['node-windows'];
   writePackageJson(nwPackageJson);
-  shell.popd(PACKAGE_NW_PATH);
+  shell.popd();
 };
