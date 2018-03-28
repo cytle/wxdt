@@ -55,7 +55,7 @@ function parseDependencies(list, packagePath, packagesName = 'packages') {
   return dependencies;
 }
 
-function updatePackageJson({
+module.exports.default = function updatePackageJson({
   PACKAGE_NAME,
   NW_VERSION,
   PACKAGE_NW_PATH,
@@ -72,16 +72,4 @@ function updatePackageJson({
   nwPackageJson.dependencies.nw = NW_VERSION;
   delete nwPackageJson.dependencies['node-windows'];
   writePackageJson(PACKAGE_NW_PATH, nwPackageJson);
-}
-
-updatePackageJson({
-  PACKAGE_NAME: 'wxdt', // package名字
-  NW_VERSION: '0.24.4-sdk', // 使用nwjs版本
-  PACKAGE_NW_PATH: path.resolve(__dirname, '..', 'package.nw'),
-  PACKAGE_EXTENDS: {
-    scripts: {
-      start: 'nw .',
-    },
-    bin: './wxdt.js',
-  },
-});
+};

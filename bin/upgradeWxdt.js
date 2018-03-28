@@ -4,23 +4,57 @@
 
 const os = require('os');
 const shell = require('shelljs');
-const path = require('path');
+const { resolve } = require('path');
+const updatePackageJson = require('./updatePackageJson');
 
-const PACKAGE_NW_PATH = path.resolve(__dirname, '..', 'package.nw');
+shell.pushd(resolve(__dirname, ''));
 
-shell.cp(
-  '-r',
-  path.resolve(os.homedir(), '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw'),
-  PACKAGE_NW_PATH,
+// 0. 新建tmp或是清空tmp文件夹
+shell.rm(
+  '-rf',
+  resolve,
+  'tmp',
 );
 
-//
-// 0. 新建tmp或是清空tmp文件夹
 // 1. 使用wine安装开发者工具
+
 // 2. 把开发者工具文件夹拷贝到tmp
+shell.cp(
+  '-r',
+  resolve(os.homedir(), '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw'),
+  'tmp',
+);
+
 // 3. 使用updateDependencies更新package.json
+updatePackageJson({
+  PACKAGE_NAME: 'wxdt', // package名字
+  NW_VERSION: '0.24.4-sdk', // 使用nwjs版本
+  PACKAGE_NW_PATH: 'tmp',
+  PACKAGE_EXTENDS: {
+    scripts: {
+      start: 'nw .',
+    },
+    bin: './wxdt.js',
+  },
+});
+
 // 4. fix node-sync-ipc 将tmp/packages/node-sync-ipc用package.nw/packages/node-sync-ipc替换
+shell.rm('-rf', 'tmp/packages/node-sync-ipc');
+shell.cp('-r', 'packages/node-sync-ipc', 'tmp/packages/');
+
 // 5. 将tmp/node_modules用package.nw/node_modules替换
+shell.rm('-rf', 'tmp/node_modules');
+shell.mv('package.nw/node_modules', 'package.nw/yarn.lock', 'tmp/');
+
 // 6. 将package.nw用tmp替换
+shell.rm('-rf', 'package.nw');
+shell.mv('tmp', 'package.nw');
+
 // 7. 升级package.nw目录下依赖包
+shell.pushd('package.nw');
+shell.exec('yarn install');
+shell.popd();
+
 // 8. 测试
+shell.exec('./package.nw/wxdt.js');
+shell.popd();
