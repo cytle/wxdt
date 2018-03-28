@@ -36,7 +36,10 @@ updatePackageJson({
 shell.rm('-rf', 'tmp/packages/node-sync-ipc');
 shell.cp('-r', 'packages/node-sync-ipc', 'tmp/packages/');
 
-// 5. 将tmp/node_modules用package.nw/node_modules替换
+// 5. 复制wxdt到tmp
+shell.cp('bin/wxdt.js', 'tmp/');
+
+// 6. 将tmp/node_modules用package.nw/node_modules替换
 shell.rm('-rf', 'tmp/node_modules');
 
 if (shell.test('-d', 'package.nw') &&
@@ -46,15 +49,15 @@ if (shell.test('-d', 'package.nw') &&
   shell.mv('package.nw/node_modules', 'package.nw/yarn.lock', 'tmp/');
 }
 
-// 6. 将package.nw用tmp替换
+// 7. 将package.nw用tmp替换
 shell.rm('-rf', 'package.nw');
 shell.mv('tmp', 'package.nw');
 
-// 7. 升级package.nw目录下依赖包
+// 8. 升级package.nw目录下依赖包
 shell.pushd('package.nw');
 shell.exec('yarn install');
 shell.popd();
 
-// 8. 测试
+// 9. 测试
 shell.exec('./package.nw/wxdt.js');
 shell.popd();
