@@ -7,23 +7,17 @@ const shell = require('shelljs');
 const { resolve } = require('path');
 const updatePackageJson = require('./updatePackageJson');
 
+const tencentWxdtPath = resolve(os.homedir(), '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw');
+
 shell.pushd(resolve(__dirname, ''));
 
 // 0. 新建tmp或是清空tmp文件夹
-shell.rm(
-  '-rf',
-  resolve,
-  'tmp',
-);
+shell.rm('-rf', resolve, 'tmp');
 
 // 1. 使用wine安装开发者工具
 
 // 2. 把开发者工具文件夹拷贝到tmp
-shell.cp(
-  '-r',
-  resolve(os.homedir(), '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw'),
-  'tmp',
-);
+shell.cp('-r', tencentWxdtPath, 'tmp');
 
 // 3. 使用updateDependencies更新package.json
 updatePackageJson({
@@ -44,7 +38,13 @@ shell.cp('-r', 'packages/node-sync-ipc', 'tmp/packages/');
 
 // 5. 将tmp/node_modules用package.nw/node_modules替换
 shell.rm('-rf', 'tmp/node_modules');
-shell.mv('package.nw/node_modules', 'package.nw/yarn.lock', 'tmp/');
+
+if (shell.test('-d', 'package.nw') &&
+  shell.test('-d', 'package.nw/node_modules') &&
+  shell.test('-f', 'package.nw/yarn.lock')
+) {
+  shell.mv('package.nw/node_modules', 'package.nw/yarn.lock', 'tmp/');
+}
 
 // 6. 将package.nw用tmp替换
 shell.rm('-rf', 'package.nw');
