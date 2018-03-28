@@ -6,6 +6,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
+    "start": "node bin/upgradeWxdt.js",
     "precommit": "lint-staged"
   },
   "lint-staged": {

@@ -9,7 +9,7 @@ const updatePackageJson = require('./updatePackageJson');
 
 const tencentWxdtPath = resolve(os.homedir(), '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw');
 
-shell.pushd(resolve(__dirname, ''));
+shell.pushd(resolve(__dirname, '..'));
 
 // 0. 新建tmp或是清空tmp文件夹
 shell.rm('-rf', resolve, 'tmp');
