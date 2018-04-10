@@ -1,5 +1,5 @@
 /**
- * 更新package.nw源代码
+ * 更新package.nw源代码脚本
  */
 
 const os = require('os');
@@ -7,22 +7,24 @@ const shell = require('shelljs');
 const { resolve } = require('path');
 const updatePackageJson = require('./updatePackageJson');
 
-const tencentWxdtPath = resolve(os.homedir(), '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw');
+const tencentWxdtPath = resolve(
+    os.homedir(),
+    '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw',
+);
 
 shell.pushd(resolve(__dirname, '..'));
 
 // 0. 清空tmp文件夹
 shell.rm('-rf', 'tmp');
 
-// 1. 使用wine安装开发者工具
+// TODO 1. 使用wine安装开发者工具
 
 // 2. 把开发者工具文件夹拷贝到tmp
 shell.cp('-R', tencentWxdtPath, 'tmp');
 
 // 3. 使用updateDependencies更新package.json
-updatePackageJson({
+updatePackageJson(resolve(process.cwd(), 'tmp'), {
   nwVersion: '0.24.4-sdk', // 使用nwjs版本
-  cwd: resolve(process.cwd(), 'tmp'),
   packageExtends: {
     name: 'wxdt',
     scripts: {
@@ -32,7 +34,10 @@ updatePackageJson({
   },
 });
 
-// 4. fix node-sync-ipc 将tmp/packages/node-sync-ipc用package.nw/packages/node-sync-ipc替换
+/**
+ * 4. fix node-sync-ipc
+ * 将tmp/packages/node-sync-ipc用package.nw/packages/node-sync-ipc替换
+ */
 shell.rm('-rf', 'tmp/packages/node-sync-ipc');
 shell.cp('-r', 'packages/node-sync-ipc', 'tmp/packages/');
 
