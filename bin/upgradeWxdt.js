@@ -5,7 +5,7 @@
 const os = require('os');
 const shell = require('shelljs');
 const { resolve } = require('path');
-const updatePackageJson = require('./updatePackageJson');
+const updatePackageJson = require('../lib/updatePackageJson');
 
 const tencentWxdtPath = resolve(
     os.homedir(),
