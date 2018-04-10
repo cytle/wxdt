@@ -8,8 +8,8 @@ const { resolve } = require('path');
 const updatePackageJson = require('../lib/updatePackageJson');
 
 const tencentWxdtPath = resolve(
-    os.homedir(),
-    '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw',
+  os.homedir(),
+  '.wine/drive_c/Program Files (x86)/Tencent/微信web开发者工具/package.nw',
 );
 
 shell.pushd(resolve(__dirname, '..'));
