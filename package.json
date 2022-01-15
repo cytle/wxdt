@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.12",
-    "shelljs": "^0.8.1"
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
